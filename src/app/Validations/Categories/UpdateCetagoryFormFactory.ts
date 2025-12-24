@@ -11,4 +11,25 @@ export type UpdateCetagoryForm = FormGroup<{
 
 export function updateCetagoryForm(){
     const base = baseCategoryForm();
+
+    base.name.addValidators([Validators.maxLength(50)]);
+
+    base.name.updateValueAndValidity({emitEvent:false});
+
+    return new FormGroup({
+        id: new FormControl(0, {
+            
+            validators: [Validators.required, Validators.min(1)],
+            nonNullable:true
+        }),
+        ...base,
+    });
+}
+
+export function toUpdateCategoryRequest(form:UpdateCetagoryForm): UpdateCategoryRequestModel{
+    return{
+        id: form.controls.id.value,
+        categoryName: form.controls.name.value,
+        description: form.controls.description.value,
+    };
 }

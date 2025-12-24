@@ -1,1 +1,111 @@
-<p>product-operation works!</p>
+<table>
+  <tr>
+    <th>Id</th>
+    <th>Ürün Adı</th>
+    <th>Birim Fiyat</th>
+    <th>Kategori</th>
+    <th>İşlemler</th>
+  </tr>
+
+  @for(product of products();track product.id){
+  <tr>
+    <td>{{ product.id }}</td>
+    <td>{{ product.productName }}</td>
+    <td>{{ product.unitPrice }}</td>
+    <td>{{ product.categoryName }}</td>
+    <td>
+      <button (click)="startUpdate(product)">Güncelle</button>
+      <button (click)="onDelete(product.id)">Sil</button>
+    </td>
+  </tr>
+  }
+</table>
+
+<hr />
+
+<form [formGroup]="createForm" (ngSubmit)="onCreate()">
+  <h3>Ürün Ekle</h3>
+  <label>
+    Ürün Adı
+    <input type="text" formControlName="name" />
+  </label>
+  @if(getErrorMessageByName(createForm,'name'); as msg){
+  <div class="error">
+    {{ msg }}
+  </div>
+  }
+
+  <label>
+    Birim Fiyat
+    <input type="number" formControlName="unitPrice" />
+  </label>
+  @if(getErrorMessageByName(createForm,'unitPrice'); as msg){
+  <div class="error">
+    {{ msg }}
+  </div>
+  }
+
+  <label>
+    Kategori
+    <select formControlName="categoryId">
+      <option [ngValue]="null">-- Kategori Seçin --</option>
+      @for(category of categories(); track category.id){
+        <option [ngValue]="category.id">{{ category.categoryName }}</option>
+      }
+    </select>
+  </label>
+  @if(getErrorMessageByName(createForm,'categoryId'); as msg){
+  <div class="error">
+    {{ msg }}
+  </div>
+  }
+
+  <button type="submit" [disabled]="createForm.invalid">Ekle</button>
+</form>
+
+<hr />
+@if(selectedProduct() !== null){
+<form [formGroup]="updateForm" (ngSubmit)="onUpdate()">
+  <h3>Ürün Güncelle</h3>
+
+  <input type="hidden" formControlName="id" />
+
+  <label>
+    Ürün Adı
+    <input type="text" formControlName="name" />
+  </label>
+  @if(getErrorMessageByName(updateForm,'name'); as msg){
+  <div class="error">
+    {{ msg }}
+  </div>
+  }
+
+  <label>
+    Birim Fiyat
+    <input type="number" formControlName="unitPrice" />
+  </label>
+  @if(getErrorMessageByName(updateForm,'unitPrice'); as msg){
+  <div class="error">
+    {{ msg }}
+  </div>
+  }
+
+  <label>
+    Kategori
+    <select formControlName="categoryId">
+      <option [ngValue]="null">-- Kategori Seçin --</option>
+      @for(category of categories(); track category.id){
+        <option [ngValue]="category.id">{{ category.categoryName }}</option>
+      }
+    </select>
+  </label>
+  @if(getErrorMessageByName(updateForm,'categoryId'); as msg){
+  <div class="error">
+    {{ msg }}
+  </div>
+  }
+
+  <button type="submit" [disabled]="updateForm.invalid">Güncelle</button>
+  <button type="button" (click)="cancelUpdate()">İptal</button>
+</form>
+}
